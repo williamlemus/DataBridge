@@ -47,6 +47,31 @@ class SQLObject
     parse_all(all)
   end
 
+  def self.first
+    row = DBConnection.execute(<<-SQL)
+      SELECT
+        *
+      FROM
+        #{self.table_name}
+      LIMIT
+        1
+      SQL
+    self.new(row.first)
+  end
+
+  def self.last
+    row = DBConnection.execute(<<-SQL)
+      SELECT
+        *
+      FROM
+        #{self.table_name}
+      ORDER BY id DESC
+      LIMIT
+        1
+      SQL
+    self.new(row.first)
+  end
+
   def self.parse_all(results)
     obj_array = []
     results.each do |row|
